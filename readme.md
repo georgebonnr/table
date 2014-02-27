@@ -16,6 +16,8 @@ Username (email): 'f@f.com'
 
 Password: '123'
 
+-note: Currently a bug with getting ranges on reservations that I am working out – probably ISOString issues. 
+
 
 ### API:
 - NOTE: All API requests are handled separately from the web app and can be used with curl via basic authentication.
@@ -127,10 +129,12 @@ Example:
       * But a 'dedicated db' model (one db per customer) might not be feasible for a relatively low-cost cloud service
       * So the DB supporting the API needs to be organization-agnostic, while the API itself needs to only be available internally to an organization. Created some interesting design challenges in Mongo.
       * Biggest challenge in Mongo was designing so that documents could take advantage of nested data structures but not grow in size.
+
    * MongoDB
       * Tried to de-normalize where feasible (example: Employees subdocument in Organization).
       * Nested structure is a good fit for getting data related to organizations quickly.
       * If a client-facing app became more important in the future with any social elements, then a relational db would probably be  better fit.
+
    * REST
       * As much as is possible / practical, let all state be represented in the url.
    * Authentication
