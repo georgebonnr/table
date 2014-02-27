@@ -1,5 +1,7 @@
 **an api for querying restuarant reservations plus a web portal to use it**
 
+note: uploaded in progress, undergoing a last-minute refactor
+
 - format:
 (NOTE: all these queries are prefixed by '/api/v1' for clarity and versioning)
 `GET /[resource]` -- return all resources (silo'd by organization subdomain)
