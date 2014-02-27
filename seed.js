@@ -1,14 +1,14 @@
 db.dropDatabase();
-var Fu = {
-  firstName: 'Fu',
-  lastName: 'Barr',
+var Frank = {
+  firstName: 'Frank',
+  lastName: 'Frankenson',
   phone: '5555555555',
   email: 'f@f.com',
   password: '123',
   roles: ['user','employee'],
-  organizations: [{
+  organization: [{
     username: '0',
-    admin: false
+    admin: 'false'
   }]
 };
 db.users.save(Fu);
@@ -19,10 +19,10 @@ var Greg = {
   phone: '6555555556',
   email: 'g@g.com',
   password: '123',
-  roles: ['user','employee','manager'],
-  organizations: [{
+  roles: ['user','employee','front desk'],
+  organization: [{
     username: '0',
-    admin: true
+    admin: 'true'
   }]
 };
 db.users.save(Greg);
@@ -52,6 +52,10 @@ var Italian = {
   displayName: 'Italian Place',
   phone: '12345678910',
   email: 'italian@italian.com',
+  hours: {
+    open: '12:00pm',
+    close: '11:00pm'
+  },
   tables: [
     {
       name: 'a1',
@@ -127,10 +131,3 @@ var reservation3 = {
 };
 db.reservations.save(reservation3);
 
-// var reservation3 = {
-//   size: 2,
-//   time: new Date(),
-//   phone: '8888888888',
-//   email: 'somebody@gmail.com'
-// };
-// db.users.save(rservation2);

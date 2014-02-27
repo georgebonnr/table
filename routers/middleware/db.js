@@ -12,7 +12,6 @@ connection.once('open', function () {
 });
 
 module.exports = function db (req, res, next) {
-  console.log('req',req);
   req.db = {
     User: connection.model('User', models.User, 'users'),
     Organization: connection.model('Organization', models.Organization, 'organizations'),

@@ -1,10 +1,12 @@
 module.exports = function(req, res, next){
+  var u = req.u || req.body.u;
+  var p = req.p || req.body.p;
   var subdomain = req.subdomains[0];
   req.db.User.findOne(
     {
-      email: req.body.u
+      email: u
     },
-    'email password organizations created updated',
+    'email password organization created updated',
     {
       safe: true,
       lean: true
@@ -12,8 +14,8 @@ module.exports = function(req, res, next){
     function(err, user) {
       var o, organizations;
       if (err) { return next(err); }
-      if (user && user.password === req.body.p) {
-        organizations = user.organizations;
+      if (user && user.password === p) {
+        organizations = user.organization;
         for (var i=0; i<organizations.length; i++){
           o = organizations[i];
           if (o.username === subdomain){

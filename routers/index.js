@@ -11,6 +11,5 @@ module.exports = function(){
   app.use(app.get('loginPrefix'), express.static(path.join(__dirname, '../public/build')));
   app.use(app.router);
   app.use(express.static(path.join(__dirname, '../public/build')));
-
   application();
 };

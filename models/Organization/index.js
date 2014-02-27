@@ -32,16 +32,37 @@ module.exports = new Schema({
     default: Date.now
   },
   tables: [tables],
-  hours: {
-    weekday: {
-      open: String,
-      close: String
+  busyMorning: {
+      start: String,
+      end: String
     },
-    weekend: {
-      open: String,
-      close: String
-    }
+  slowMorning: {
+    start: String,
+    end: String
   },
+  busyMidday: {
+    start: String,
+    end: String
+  },
+  slowMidday: {
+    start: String,
+    end: String
+  },
+  busyEvening: {
+    start: String,
+    end: String
+  },
+  slowEvening: {
+    start: String,
+    end: String
+  },
+  hours: {
+    open: String,
+    close: String
+  },
+  walkInPercentageRegular: String,
+  walkInPercentageBusy: String,
+  walkInPercentageSlow: String,
   updated:  {
     type: Date,
     default: Date.now

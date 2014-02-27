@@ -52,9 +52,9 @@ module.exports = new Schema({
     type: Date,
     default: Date.now
   },
-  organizations: [{
+  organization: [{
     username: String,
-    admin: Boolean
+    isAdmin: String
   }],
   guest_organizations: [String]
 });
