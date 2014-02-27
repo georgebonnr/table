@@ -22,11 +22,12 @@ Password: '123'
 
 
 -Usage:
--GET '/reservations'
+
+**GET '/reservations'
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/reservations/`
 
 
--GET '/reservations/:id'
+**GET '/reservations/:id'
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/reservations/530e8806166ce4124fb8d6ba`
 
 
