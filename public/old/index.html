@@ -1,0 +1,43 @@
+<script src="/lib/jquery-2.1.0.min.js"></script>
+
+<html>
+  <body>
+    <h1>HTML SERVED!</h1>
+  </body>
+</html>
+
+<script>
+  var $h1 = $('h1');
+
+  $('h1').on('click',function(){
+
+  var phoneNum = '123-456-7890'.replace(/[^0-9x]/g, '')
+
+  var request = $.ajax({
+    url: "/api/v1/reservations",
+    dataType: 'json',
+    type: "GET",
+    data: {
+      foo: 'bar',
+      blah: 'blee'
+    },
+    error: function(error){
+      $h1.html(error.responseJSON.error);
+    }
+  })
+  // request.fail(function(error) {
+  //   console.log('THE OBJECT', error);
+  // })
+  request.done(function(data) {
+    if (data.redirect) {
+      // data.redirect contains the string URL to redirect to
+      window.location.href = data.redirect;
+    }
+    // if (data.redirect){
+      // console.log(data)
+    // }
+  });
+    
+
+  })
+</script>

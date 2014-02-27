@@ -1,0 +1,271 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <script src="http://code.jquery.com/jquery-2.0.3.min.js"></script>
+    <title>Table | Reservations</title>
+    <link href="../stylesheets/normalize.css" media="screen" rel="stylesheet" type="text/css" />
+<link href="../stylesheets/all.css" media="screen" rel="stylesheet" type="text/css" />
+    <script src="../scripts/all.js" type="text/javascript"></script>
+  </head>
+
+  <body class="home home_index">
+    <nav>
+  <div class="menu-wrapper">
+    <div class="nav">
+      <ul>
+        <li><a href="index.html">Table</a></li>
+        <li><a href="/logout">Sign Out</a></li>
+        <li><a href="../account/">Account</a></li>
+        <li><a href="../analytics/">Analaytics</a></li>
+        <li><a href="/home">Home</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+    <nav class="date-time">
+  <ul>
+      <li><input class="datePicker" type="date" name="date"></li>
+      <li><a href="">Jump to today</a></li>
+      <li><a href="">Morning</a></li>
+      <li><a href="">Afternoon</a></li>
+      <li><a href="">Evening</a></li>
+</nav>
+
+<div class="vertical-container">
+  <div class="vertical-tabs">
+    <div class="tabs">
+      <a href="" class="tab active">12:00pm</a>
+      <a href="" class="tab">12:30pm</a>
+      <a href="" class="tab">1:00pm</a>
+      <a href="" class="tab">1:30pm</a>
+      <a href="" class="tab">2:00pm</a>
+      <a href="" class="tab">2:30pm</a>
+      <a href="" class="tab">3:00pm</a>
+      <a href="" class="tab">3:30pm</a>
+      <a href="" class="tab">4:00pm</a>
+      <a href="" class="tab">4:30pm</a>
+      <a href="" class="tab">5:00pm</a>
+      <a href="" class="tab">5:30pm</a>
+      <a href="" class="tab">8:00pm</a>
+      <a href="" class="tab">8:30pm</a>
+      <a href="" class="tab">9:00pm</a>
+      <a href="" class="tab">9:30pm</a>
+      <a href="" class="tab">9:30pm</a>
+      <a href="" class="tab">9:30pm</a>
+      <a href="" class="tab">9:30pm</a>
+      <a href="" class="tab">9:30pm</a>
+    </div>
+
+    <div class="tab-container">
+        <!-- <a href="" class="accordion-active accordion-heading" rel="tab1">5PM</a> -->
+        <div class="tables" class="tab-content">
+          <ul id="tables" class="tables">
+
+          </ul>
+
+          <div class="createReservation">  
+          <div class="createReservationInner">  
+            <h1>Create a Reservation</h1>
+            <form class="createReservation">
+             <input type="text" name="email" placeholder="Lookup guest by email">
+             <input name="getGuest" type="lookup" class="lookup" value="Lookup">
+             <input type="date">
+             <input type="submit">
+            </form>
+            <div class='modal-notification'></div>
+            </div>
+          </div>
+          </div>
+
+        </div>
+     </div>
+  </div>
+</div>
+
+<script>
+  $(".tab-content").show();
+
+  /* if in tab mode */
+  $(".tabs .tab").click(function() {
+    event.preventDefault()
+
+    var activeTab = $(this).attr("rel");  
+
+    $(".tabs .tab").removeClass("active");
+    $(this).addClass("active");
+
+    $(".accordion-heading").removeClass("accordion-active");
+    $(".accordion-heading[rel^='"+activeTab+"']").addClass("accordion-active");
+
+  });
+
+
+
+  /* if in accordion mode */
+  $(".accordion-heading").click(function() {
+    event.preventDefault()
+
+    $(".tab-content").hide();
+    var accordion_activeTab = $(this).attr("rel"); 
+    $("#"+accordion_activeTab).show();
+
+  $(".accordion-heading").removeClass("accordion-active");
+  $(this).addClass("accordion-active");
+
+  $(".tabs .tab").removeClass("active");
+  $(".tabs .tab[rel^='"+accordion_activeTab+"']").addClass("active");
+  });
+</script>
+<script>
+  function getDateTime(){
+    var date = $('.datePicker').val().split('-');
+    var time = $('.tab.active').html().split(':');
+    var pm = time[1].slice(2);
+    time[1] = time[1].slice(0,2);
+    if (pm === "pm" && time[0] < 12){
+      time[0] = (parseInt(time[0],10) + 12).toString();
+    }
+    return {
+      year: date[0],
+      month: date[1],
+      day: date[2],
+      hour: time[0],
+      minutes: time[1]
+    }
+  }
+  Date.prototype.toDateInputValue = (function() {
+      var local = new Date(this);
+      local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+      return local.toJSON().slice(0,10);
+  });
+
+  $(document).ready( function() {
+    $('.datePicker').val(new Date().toDateInputValue());
+    $tables = $('#tables');
+
+    function makeTable(container, t){
+      container.append('<li> <div class="table available"><span>' + t.max + '</span><br><span class="name">' + t.name + '</span></div></li>');
+    }
+
+    $.ajax({
+      url: "/api/v1/tables",
+      type: "GET"
+    }).error(function(err){
+      console.log(err);
+    }).done(function(data){
+      var tables = data.tables;
+      $tables.html('');
+      for (var i=0; i<tables.length; i++){
+        makeTable($tables, tables[i]);
+      }
+    });
+
+    function applyToTable($table){
+      $table.removeClass('available');
+      $table.addClass('reserved');
+    }
+
+    $('.tab').on('click', function(data){
+      var dateTime = getDateTime();
+      var dateString = new Date(dateTime.year, dateTime.month-1, dateTime.day, dateTime.hour, dateTime.minutes).toISOString();
+      console.log('query',dateString);
+      $.ajax({
+        url: "/api/v1/reservations",
+        type: "GET",
+        data: {
+          time: dateString
+        }
+      }).error(function(err){
+        console.log(err);
+      }).done(function(data){
+        var $tableDivs = $('.table');
+        $tableDivs.removeClass('reserved');
+        $tableDivs.addClass('available');
+        data = data.data;
+        for (var i=0; i<data.length; i++){
+          var $table = $tableDivs.filter(function(index){
+            return $(this).find('span.name').html() === data[i].table;
+          })
+          applyToTable($table);
+        }
+      });
+    })
+
+    $('.tab.active').trigger('click');
+
+
+    var $modalNotification = $('.modal-notification');
+    var $createReservation = function(data){
+      $.ajax({
+        url: "/reservations",
+        type: "POST",
+        data: data
+      }).error(function(err){
+        console.log(err);
+        $modalNotification.html(err.responseText).finish().slideDown().delay(5000).slideUp();
+      }).done(function(data){
+        console.log('success',data);
+      })
+    }
+
+    var $createReservation = $('.createReservation');
+
+    $createReservation.on('submit',function(e){
+      e.preventDefault();
+
+      $createReservation({
+        email: e.target[0].value,
+        time: e.target[1].value,
+        size: e.target[2].value
+      });
+      $(this).fadeOut();
+    })
+
+    $('#tables').on('click', '.table.available', function (e) {
+      $createReservation.addClass('open').fadeIn();
+      toggle = true;
+      e.stopPropagation();
+    });
+
+    $createReservation.on('click', function(e){
+      e.stopPropagation;
+    })
+
+    $('body').on('click', function (e) {
+      if (toggle) {
+        $('.createReservation').fadeOut();
+        toggle = false;
+      }
+    });
+  
+})
+
+  
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
