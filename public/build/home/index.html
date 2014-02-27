@@ -248,10 +248,8 @@
       console.log(err);
     }).done(function(data){
       var $tableDivs = $('.table');
-      console.log('before',$tableDivs);
       $tableDivs.removeClass('reserved');
       $tableDivs.addClass('available');
-      console.log('after',$tableDivs);
 
       if (!data) {return console.log('no reservations for this period');}
       data = data.data;
@@ -259,7 +257,7 @@
         var $table = $tableDivs.filter(function(index){
           return $(this).find('span.name').html() === data[i].table;
         })
-        console.log($table);
+        // console.log($table);
         applyToTable($table);
       }
     });
@@ -268,7 +266,6 @@
   var $modalNotification = $('.modal-notification');
 
   $('#tables').on('click', '.table.available', function (e) {
-    console.log(e.currentTarget);
     capacity = e.currentTarget.firstElementChild.innerHTML;
     currentTable = e.currentTarget.lastElementChild.innerHTML
     $('.js-btn li').trigger('click');

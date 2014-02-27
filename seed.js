@@ -11,7 +11,7 @@ var Frank = {
     admin: 'false'
   }]
 };
-db.users.save(Fu);
+db.users.save(Frank);
 
 var Greg = {
   firstName: 'Greg',
@@ -103,7 +103,7 @@ db.organizations.save(Italian);
 
 var reservation1 = {
   size: 2,
-  time: new Date(),
+  time: new Date().toISOString(),
   organization: '0',
   phone: '7777777777',
   email: 'carol@gmail.com',
@@ -111,23 +111,23 @@ var reservation1 = {
 };
 db.reservations.save(reservation1);
 
-var reservation2 = {
-  size: 4,
-  time: new Date(),
-  phone: '8888888888',
-  email: 'somebody@gmail.com',
-  organization: '0',
-  table: 'b1'
-};
-db.reservations.save(reservation2);
+// var reservation2 = {
+//   size: 4,
+//   time: new Date(),
+//   phone: '8888888888',
+//   email: 'somebody@gmail.com',
+//   organization: '0',
+//   table: 'b1'
+// };
+// db.reservations.save(reservation2);
 
-var reservation3 = {
-  size: 4,
-  time: new Date(2014,02,24,12,30),
-  phone: '8888888888',
-  email: 'somebody@gmail.com',
-  organization: '0',
-  table: 'b1'
-};
-db.reservations.save(reservation3);
+// var reservation3 = {
+//   size: 4,
+//   time: new Date(2014,02,24,12,30),
+//   phone: '8888888888',
+//   email: 'somebody@gmail.com',
+//   organization: '0',
+//   table: 'b1'
+// };
+// db.reservations.save(reservation3);
 
