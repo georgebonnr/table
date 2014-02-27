@@ -23,15 +23,15 @@ Password: '123'
 
 -Usage:
 
-**GET '/reservations'
+GET `'/reservations`
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/reservations/`
 
 
-**GET '/reservations/:id'
+GET `'/reservations/:id'`
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/reservations/530e8806166ce4124fb8d6ba`
 
 
--POST '/reservations'
+POST `'/reservations'`
 
 as json:
 `curl -u f@f.com:123 -X POST -H "Content-Type: application/json" -d '{"size":"2", "phone":"12314567823", "email":"carol@gmail.com", "organization":"0", "time":"2014-02-27T07:01:42.900Z", "table":"a1"}' http://127.0.0.1:3000/api/v1/reservations`
@@ -40,41 +40,42 @@ as querystring:
 `curl -u f@f.com:123 -X POST -d 'size=4&phone=12312547823&email=f@f.com&organization=0&time=2014-02-27T07:13:05.928Z&table=b1' http://127.0.0.1:3000/api/v1/reservations`
 
 
--PUT '/reservations/:id'
+PUT `'/reservations/:id'`
 `curl -u f@f.com:123 -X PUT -d 'size=5' http://127.0.0.1:3000/api/v1/reservations/530e8806166ce4124fb8d6ba`
 
 
-- DELETE '/reservations/:id'
+DELETE `'/reservations/:id'`
 `curl -u f@f.com:123 -X DELETE http://127.0.0.1:3000/api/v1/reservations/530e8806166ce4124fb8d6ba`
 
 
--GET '/users'
+GET `'/users'`
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/users/`
 
 
--GET '/users/:id'
+GET `'/users/:id'`
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/users/30f0f8bb164cac25f47048e`
 
 
--POST '/users'
+POST `'/users'`
 
 as querystring:
 `curl -u f@f.com:123 -X POST -d 'firstName=John&lastName=Smith&phone=1231455555&email=john@gmail.com&password=123' http://127.0.0.1:3000/api/v1/users`
 
 
--PUT '/reservations/:id'
+PUT `'/reservations/:id'`
 `curl -u f@f.com:123 -X PUT -d 'lastName=Updated' http://127.0.0.1:3000/api/v1/users/530f22c9041c07115ae68992`
 
 
--DELETE '/reservations/:id'
+DELETE `'/reservations/:id'`
 `curl -u f@f.com:123 -X DELETE http://127.0.0.1:3000/api/v1/users/530f22c9041c07115ae68992`
 
 
 TABLES:
 
 
--GET '/tables'
+GET `'/tables'`
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/tables/`
+
 
 Also supports filtering:
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/tables/?max=4`
@@ -83,11 +84,11 @@ Also supports filtering:
 PREFERENCES:
 
 
--GET '/preferences'
+GET `'/preferences'`
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/preferences/`
 
 
--PUT '/preferences/'
+PUT `'/preferences/'`
 
 note: this will always put to the authorized organization.
 `curl -u f@f.com:123 -X PUT -d 'walkInPercentageRegular=50' http://127.0.0.1:3000/api/v1/preferences`
@@ -99,6 +100,7 @@ QUERYING:
 Example:
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/users/?lastName=Barr`
 NOTE: Queries for 'password' field are automatically stripped out.
+
 
 -You can even use this to query nested data:
 `curl -u f@f.com:123 127.0.0.1:3000/api/v1/users/?organization.admin=true`
