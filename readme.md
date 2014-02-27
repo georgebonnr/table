@@ -1,11 +1,24 @@
-**an api for querying restuarant reservations plus a web portal to use it**
+###an api for querying restuarant reservations plus a web portal to use it**
 
-**to use:**
+###
 -`npm install`
+
 -install mongodb locally
--`node app`
+
+-seed the database by running `mongo localhost:27017/table seed.js`
+
+-run the server `node app`
+
+#### Web Client access:
 - Access at 127.0.0.1:3000 – NOTE: api is designed for use with subdomains for supporting different organizations – the authorized organization name for this route will be the string '0' -- localhost will not work.
-- format:
+
+Username (email): 'f@f.com'
+
+Password: '123'
+
+
+### API:
+- NOTE: All API requests are handled separately from the web app and can be used with curl via basic authentication.
 
 
 -Usage:
