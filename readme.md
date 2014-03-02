@@ -1,4 +1,4 @@
-###an api for querying restuarant reservations plus a web portal to use it**
+###an api for querying restuarant reservations plus a web portal to use it
 
 ###
 -`npm install`
@@ -15,8 +15,6 @@
 Username (email): 'f@f.com'
 
 Password: '123'
-
--note: Currently a bug with getting ranges on reservations that I am working out – probably ISOString issues. 
 
 
 ### API:
