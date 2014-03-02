@@ -10,7 +10,7 @@
 -run the server `node app`
 
 #### Web Client access:
-- Access at 127.0.0.1:3000 – NOTE: api is designed for use with subdomains for supporting different organizations – the authorized organization name for this route will be the string '0' -- localhost will not work.
+- Access at 127.0.0.1:3000 – NOTE: functionality on the web app (getting reservation times, etc. is mostly for puposes of demo'ing how the interface would work – does not necessarily return real data).
 
 Username (email): 'f@f.com'
 
