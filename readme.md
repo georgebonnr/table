@@ -118,10 +118,8 @@ Example:
 -Notes:
   * Namespacing
       * painful issue compared to other b2b services due to large number of restaurants and also some chain restaurants
-      * chensgardenberkeley.table.com starts to get ugly.
-      * www.table.com/chensgardenberkeley/etc. starts to make paths longer and uglier, though, probably even worse.
-      * Unique username for each business.
-      * Feature: the API does not require users to remember their organization's unique username to log into the service. They can simply log in from www.table.com and the API will query Mongo for the appropriate organization_id, after which the appropriate username will be applied in the url for the web client.
+      * chensgardenberkeley.table.com -- individual subdomain based on restaurant username -- internal.
+      * Unique username for each business (i.e. for chain restaurants username might append zip code, etc.).
    * Single-Tenant API, but Multi-Tenant DB Schema
       * API tasks are only relevant to an individual restaurant location.
       * But a 'dedicated db' model (one db per customer) might not be feasible for a relatively low-cost cloud service
