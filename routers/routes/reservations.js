@@ -23,7 +23,9 @@ module.exports.getOne = function(req, res, next) {
 };
 
 module.exports.create = function(req, res, next) {
-  console.log('body',req.body);
+  // no checks for reservation conflicts -- that kind of logic probably
+  // doesn't belong on this level – should be handled by whatever application
+  // or developer is using the api
   if (!req.body.organization) {
     req.body.organization = req.session.organization;
   }
