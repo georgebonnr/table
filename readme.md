@@ -10,7 +10,7 @@
 -run the server `node app`
 
 #### Web Client access:
-- Access at 127.0.0.1:3000 – NOTE: functionality on the web app (getting reservation times, etc. is mostly for puposes of demo'ing how the interface would work – does not necessarily return real data).
+- Access at 127.0.0.1:3000 – NOTE: some functionality on the web app are stubs.
 
 Username (email): 'f@f.com'
 
