@@ -2,6 +2,9 @@ module.exports = function(req, res, next){
   var u = req.u || req.body.u;
   var p = req.p || req.body.p;
   var subdomain = req.subdomains[0];
+  if (typeof subdomain === 'undefined'){
+    res.send(400, {error: "No organization subdomain"});
+  }
   req.db.User.findOne(
     {
       email: u
@@ -29,7 +32,7 @@ module.exports = function(req, res, next){
             return next();
           }
         }
-        res.send(401,{error: "Insufficient Authorization"});
+        res.send(403,{error: "Insufficient Authorization"});
       } else {
         res.send(401,{error: "Invalid Credentials"});
       }

@@ -27,7 +27,7 @@
 
     <div class="image-gradient-dynamic">
   <div class="image-wrapper">
-    <img src="http://distilleryimage6.s3.amazonaws.com/8199ac869e8811e3abe112bbcb4e2daa_8.jpg" alt="">
+    <!-- <img src="http://distilleryimage6.s3.amazonaws.com/8199ac869e8811e3abe112bbcb4e2daa_8.jpg" alt=""> -->
   </div>
   <div class="copy">
     <!--modal--!>
@@ -70,8 +70,15 @@
         type: "POST",
         data: data
       }).error(function(err){
-        console.log(err);
-        $modalNotification.html(err.responseText).finish().slideDown().delay(5000).slideUp();
+        var msg = err.responseJSON.error;
+        if (err.status == 400){
+          msg = msg + ' (are you using localhost?)'
+        } else if (err.status == 403){
+          msg = 'Not authorized to access that resource.';
+        } else if (err.status == 401){
+          msg = 'Email or password not found.'
+        }
+        $modalNotification.html(msg).finish().slideDown().delay(5000).slideUp();
       }).done(function(data){
         window.location = data.location;
       })

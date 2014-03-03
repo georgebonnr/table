@@ -32,9 +32,6 @@
       <li><a href="">Morning</a></li>
       <li><a href="">Afternoon</a></li>
       <li><a href="">Evening</a></li>
-</nav>
-
-
 
 <!--begin modal--!>
       <div class="modal">
@@ -51,7 +48,7 @@
 
             <!--begin form--!>
             <h1>Create a Reservation</h1>
-            <form class="phoneForm">
+            <form class="reservationInit">
               <fieldset>
                <input type="text" name="phone" placeholder="Find guest by phone (hint: 5's)">
                <input name="getGuest" type="submit" value="Lookup">
@@ -59,19 +56,13 @@
             </form>
             <div class='modal-notification'></div>
 
-            <form class="reservationDetails">
+            <form class="reservationComplete">
               <fieldset>
-               <label>Reservation for:</label>
-               <input type="date" class="inline">
-               <input type="time" class="inline">
                <input type="number" placeholder="Number of guests" class="inline">
               </fieldset>
              <input type="submit" class="inline">
             </form>
-            <div class='modal-notification'></div>
             <!--end form--!>
-
-            <div class='modal-notification'></div>
           </div>
         </div>
       </div>
@@ -87,21 +78,28 @@
       
     </div>
 
-    <div class="tab-container">
+      <div class="tab-container">
         <!-- <a href="" class="accordion-active accordion-heading" rel="tab1">5PM</a> -->
         <div class="tables" class="tab-content">
           <ul id="tables" class="tables">
 
           </ul>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
+  var client = {};
+  var datePicker = $('.datePicker')[0];
   var hoursPicker = ['12:00am','12:30am','1:00am','1:30am','2:30am','3:00am',
   '3:30am','4:00am','4:30am','5:00am','5:30am','6:00am','6:30am','7:00am',
   '7:30am','8:00am','8:30am','9:00am','9:30am','10:00am','10:30am','11:00am',
-  '11:30am','12:00pm','12:30pm','1:00pm','1:30pm','2:30pm','3:00pm','3:30pm',
+  '11:30am','12:00pm','12:30pm','1:00pm','1:30pm','2:00pm','2:30pm','3:00pm','3:30pm',
   '4:00pm','4:30pm','5:00pm','5:30pm','6:00pm','6:30pm','7:00pm','7:30pm',
   '8:00pm','8:30pm','9:00pm','9:30pm','10:00pm','10:30pm','11:00pm','11:30pm']
 
   var $tabs = $('.tabs');
+
   $.ajax({
     url: "/api/v1/preferences",
     type: "GET",
@@ -120,64 +118,19 @@
         $tabs.append("<a href='' class='tab'>" + hoursPicker[start] + '</a>');
       }
     } else {
-      var h1 = '<h1>No Opening Hours Entered for this organization – unable to populate time picker</h1>'
+      var h1 = '<h1>No hours have been set for this organization – unable to populate time picker</h1>'
     }
   })
 
-
-  $('.tab.active').trigger('click');
   var $modalNotification = $('.modal-notification');
 
-  var currentPerson, currentTable, capacity;
-  $('.reservationDetails').on('submit', function(e){
-    e.preventDefault();
-    var $this = $(this);
-    var date = $($this[0][1]);
-    var time = $($this[0][2]);
-    var size = $($this[0][3])[0].value;
-    if (size > capacity) {
-      $modalNotification.html('table does not have capacity').finish().slideDown().delay(5000).slideUp();
-    }
-    var sample = getDateTime(date,time);
-    var target = new Date(sample.year, sample.month-1, sample.day, sample.hour, sample.minutes);
-    target = target.toISOString();
-    $.ajax({
-        url: "/api/v1/reservations",
-        type: "POST",
-        data: {
-          email: currentPerson.email,
-          phone: currentPerson.phone,
-          time: target,
-          size: size,
-          table: currentTable
-        }
-      }).error(function(err){
-        console.log(err);
-        $modalNotification.html(err.responseText).finish().slideDown().delay(5000).slideUp();
-      }).done(function(data){
-        console.log('success',data);
-        $('.modal-close').trigger('click');
-        $('.tab.active').trigger('click');
-      })
-  })
-  function getDateTime(picker,time){
-    var route;
-    if (picker) {route = true;}
-    var date = picker || $('.datePicker')
-    time = time || $('.tab.active')
-    if (route){
-      date = date[0].value.split('-');
-    } else {
-      date = date.val().split('-');
-    }
-    if (route){
-      time = time[0].value.split(':');
-    } else {
-      time = time.html().split(':');
-    }
-    var pm = time[1].slice(2);
+  function getDateTime(date, time){
+    date = date.value.split('-');
+    time.value = time.value || time.text;
+    time = time.value.split(':');
+    var isPm = time[1].slice(2);
     time[1] = time[1].slice(0,2);
-    if (pm === "pm" && time[0] < 12){
+    if (isPm === "pm" && time[0] < 12){
       time[0] = (parseInt(time[0],10) + 12).toString();
     }
     var result = {
@@ -189,17 +142,21 @@
     }
     return result;
   }
+
   Date.prototype.toDateInputValue = (function() {
       var local = new Date(this);
       local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+      console.log(local.toJSON());
       return local.toJSON().slice(0,10);
   });
 
-  $('.datePicker').val(new Date().toDateInputValue());
-  $tables = $('#tables');
+  datePicker.value = (new Date().toDateInputValue());
+
+  $tableContainer = $('#tables');
+  var $tables;
 
   function makeTable(container, t){
-    container.append('<li> <div class="table available"><span>' + t.max + '</span><br><span class="name">' + t.name + '</span></div></li>');
+    container.append('<li> <div id="' + t.name + '" class="table"><div>' + t.max + '</div><span>' + t.name + '</span></div></li>');
   }
 
   $.ajax({
@@ -209,34 +166,22 @@
     console.log(err);
   }).done(function(data){
     var tables = data.data;
-    $tables.html('');
+    $tableContainer.html('');
     for (var i=0; i<tables.length; i++){
-      makeTable($tables, tables[i]);
+      makeTable($tableContainer, tables[i]);
     }
+    $tables = $('.table');
+    $('.tab.active').trigger('click');
   });
 
-  function applyToTable($table){
-    $table.removeClass('available');
-    $table.removeClass('reserved');
-    $table.addClass('reserved');
-  }
-
-  $('.tabs').on('click', '.tab', '.tab.active', function(e){
-    // e.preventDefault();
-    var dateTime = getDateTime();
-    var startMinutes = 30;
-    var endMinutes = 0;
-    if (dateTime.minutes == 30){
-      startMinutes = endMinutes;
-      endMinutes = startMinutes;
-    }
-    var target = new Date(dateTime.year, dateTime.month-1, dateTime.day, dateTime.hour, dateTime.minutes);
+  $('.tabs').on('click', '.tab', function(e){
+    e.preventDefault();
+    var dateTime = getDateTime(datePicker, this);
+    client.dateTime = target = new Date(dateTime.year, dateTime.month-1, dateTime.day, dateTime.hour, dateTime.minutes);
     var start = new Date(dateTime.year, dateTime.month-1, dateTime.day, dateTime.hour, dateTime.minutes);
     var end = new Date(dateTime.year, dateTime.month-1, dateTime.day, dateTime.hour, dateTime.minutes);
     start.setHours(target.getHours() - 2)
-    start = start.toISOString();
     end.setHours(target.getHours() + 2)
-    end = end.toISOString();
     $.ajax({
       url: "/api/v1/reservations",
       type: "GET",
@@ -247,37 +192,34 @@
     }).error(function(err){
       console.log(err);
     }).done(function(data){
-      var $tableDivs = $('.table');
-      $tableDivs.removeClass('reserved');
-      $tableDivs.addClass('available');
-
+      $tables.removeClass('reserved');
       if (!data) {return console.log('no reservations for this period');}
-      data = data.data;
+      if (data.data) {data = data.data;}
+      console.log('data',data);
       for (var i=0; i<data.length; i++){
-        var $table = $tableDivs.filter(function(index){
-          return $(this).find('span.name').html() === data[i].table;
-        })
-        // console.log($table);
-        applyToTable($table);
+        var tableId = '#' + data[i].table
+        $(tableId).addClass('reserved');
       }
     });
   })
 
   var $modalNotification = $('.modal-notification');
 
-  $('#tables').on('click', '.table.available', function (e) {
-    capacity = e.currentTarget.firstElementChild.innerHTML;
-    currentTable = e.currentTarget.lastElementChild.innerHTML
+  var $reservationInit;
+  
+  $('#tables').on('click', '.table:not(.reserved)', function (e) {
     $('.js-btn li').trigger('click');
     $('.modal-inner').addClass('reservationsModal');
+    $reservationInit = $('.reservationInit');
+    $reservationInit.data('table', e.currentTarget.lastElementChild.innerHTML);
+    $reservationInit.data('capacity', parseInt(e.currentTarget.firstElementChild.innerHTML, 10));
+    $reservationInit.data('dateTime', client.dateTime);
   });
 
-  var $phoneForm = $('.phoneForm');
 
-  $phoneForm.on('submit', function(e){
+  $('.reservationInit').on('submit', function(e){
     e.preventDefault();
     var phone = $(this)[0][1].value.replace(/\D/g,'');
-
     $.ajax({
       url: "/api/v1/users",
       type: "GET",
@@ -288,23 +230,48 @@
       var person;
       if (data.data && data.data[0]){
         person = data.data[0];
-        $phoneForm.html('')
-        $phoneForm.append('<h1>' + person.firstName + ' ' + person.lastName +'</h1>')
-        currentPerson = person;
+        $reservationInit.html('')
+        $reservationInit.append('<h1>' + person.firstName + ' ' + person.lastName +'</h1>')
+        $reservationInit.data('person', person);
       } else {
         $modalNotification.text('number not found').finish().slideDown().delay(5000).slideUp();
       }
     });
   });
 
+  $('.reservationComplete').on('submit', function(e){
+    e.preventDefault();
+    var size = this[1].valueAsNumber;
+    if (size > $reservationInit.data('capacity')) {
+      return $modalNotification.html('table does not have capacity').finish().slideDown().delay(5000).slideUp();
+    }
+    $.ajax({
+        url: "/api/v1/reservations",
+        type: "POST",
+        data: {
+          email: $reservationInit.data('person').email,
+          phone: $reservationInit.data('person').phone,
+          time: $reservationInit.data('dateTime'),
+          size: size,
+          table: $reservationInit.data('table')
+        }
+      }).error(function(err){
+        console.log(err);
+        $modalNotification.html(err.responseText).finish().slideDown().delay(5000).slideUp();
+      }).done(function(data){
+        console.log('success',data);
+        $reservationInit = null;
+        $('.modal-close').trigger('click');
+        $('.tab.active').trigger('click');
+      })
+  })
+
   $(".tab-content").show();
 
   /* if in tab mode */
   $(".tabs").on('click', '.tab', function() {
     event.preventDefault()
-
     var activeTab = $(this).attr("rel");  
-
     $(".tabs .tab").removeClass("active");
     $(this).addClass("active");
 

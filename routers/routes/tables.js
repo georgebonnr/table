@@ -12,13 +12,11 @@ module.exports.get = function(req, res, next) {
   var query = req.db.Organization.findOne({ username : req.session.organization }, 'tables');
   query.limit(100).lean().exec(function (err, data) {
     if (err) next(err);
-    console.log('data',data);
     if (data && data.tables){
       data = data.tables;
       var val;
       var array = [];
       if (isEmpty(req.query)){
-        console.log('is empty',data);
         return res.send(200, {data:data});
       } else {
         for (var p in req.query){

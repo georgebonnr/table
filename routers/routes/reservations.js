@@ -1,5 +1,4 @@
 module.exports.get = function(req, res, next) {
-  console.log(req.query);
   var query = req.db.Reservation.find({ organization: req.session.organization });
   if (req.query.start) {
     query = query.where('time').gt(req.query.start);
@@ -24,6 +23,7 @@ module.exports.getOne = function(req, res, next) {
 };
 
 module.exports.create = function(req, res, next) {
+  console.log('body',req.body);
   if (!req.body.organization) {
     req.body.organization = req.session.organization;
   }
