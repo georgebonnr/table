@@ -1,4 +1,4 @@
-###an api for querying restuarant reservations plus a web portal to use it**
+###an api for querying restuarant reservations plus a web portal to use it
 
 ###
 -`npm install`
@@ -10,7 +10,7 @@
 -run the server `node app`
 
 #### Web Client access:
-- Access at 127.0.0.1:3000 – NOTE: api is designed for use with subdomains for supporting different organizations – the authorized organization name for this route will be the string '0' -- localhost will not work.
+- Access at 127.0.0.1:3000 – NOTE: functionality on the web app (getting reservation times, etc. is mostly for puposes of demo'ing how the interface would work – does not necessarily return real data).
 
 Username (email): 'f@f.com'
 
@@ -127,10 +127,12 @@ Example:
       * But a 'dedicated db' model (one db per customer) might not be feasible for a relatively low-cost cloud service
       * So the DB supporting the API needs to be organization-agnostic, while the API itself needs to only be available internally to an organization. Created some interesting design challenges in Mongo.
       * Biggest challenge in Mongo was designing so that documents could take advantage of nested data structures but not grow in size.
+
    * MongoDB
       * Tried to de-normalize where feasible (example: Employees subdocument in Organization).
       * Nested structure is a good fit for getting data related to organizations quickly.
       * If a client-facing app became more important in the future with any social elements, then a relational db would probably be  better fit.
+
    * REST
       * As much as is possible / practical, let all state be represented in the url.
    * Authentication
