@@ -1,1 +1,30 @@
-function makeTable(e,a){e.append('<li> <div id="'+a.name+'" class="table"><div>'+a.max+"</div><span>"+a.name+"</span></div></li>")}$tableContainer=$("#tables");var $tables;$.ajax({url:"/api/v1/tables",type:"GET"}).error(function(e){console.log(e)}).done(function(e){var a=e.data;$tableContainer.html("");for(var t=0;t<a.length;t++)makeTable($tableContainer,a[t]);$tables=$(".table"),$(".tab.active").trigger("click")}),$("#tables").on("click",".table:not(.reserved)",function(e){$(".js-btn li").trigger("click"),$(".modal-inner").addClass("reservationsModal"),$reservationInit=$(".reservationInit"),$reservationInit.data("table",e.currentTarget.lastElementChild.innerHTML),$reservationInit.data("capacity",parseInt(e.currentTarget.firstElementChild.innerHTML,10)),$reservationInit.data("dateTime",client.dateTime)});
+$tableContainer = $('#tables');
+var $tables;
+
+function makeTable(container, t){
+  container.append('<li> <div id="' + t.name + '" class="table"><div>' + t.max + '</div><span>' + t.name + '</span></div></li>');
+}
+
+$.ajax({
+  url: "/api/v1/tables",
+  type: "GET"
+}).error(function(err){
+  console.log(err);
+}).done(function(data){
+  var tables = data.data;
+  $tableContainer.html('');
+  for (var i=0; i<tables.length; i++){
+    makeTable($tableContainer, tables[i]);
+  }
+  $tables = $('.table');
+  $('.tab.active').trigger('click');
+});
+
+$('#tables').on('click', '.table:not(.reserved)', function (e) {
+  $('.js-btn li').trigger('click');
+  $('.modal-inner').addClass('reservationsModal');
+  $reservationInit = $('.reservationInit');
+  $reservationInit.data('table', e.currentTarget.lastElementChild.innerHTML);
+  $reservationInit.data('capacity', parseInt(e.currentTarget.firstElementChild.innerHTML, 10));
+  $reservationInit.data('dateTime', client.dateTime);
+});
