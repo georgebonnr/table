@@ -1,5 +1,5 @@
 // dates and times
-datePicker = $('.datePicker')[0];
+var datePicker;
 
 function getDateTime(date, time){
   date = date.value.split('-');
@@ -23,7 +23,6 @@ function getDateTime(date, time){
 Date.prototype.toDateInputValue = (function() {
     var local = new Date(this);
     local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
-    console.log(local.toJSON());
     return local.toJSON().slice(0,10);
 });
 
@@ -31,8 +30,12 @@ function resetDate(dateInput){
   dateInput.value = (new Date().toDateInputValue());
 }
 
-resetDate(datePicker);
+$(document).ready(function(){
+  datePicker = $('.datePicker')[0];
 
-datePicker.onchange = function(e){
-  $('.tab.active').trigger('click');
-};
+  datePicker.onchange = function(e){
+    $('.tab.active').trigger('click');
+  };
+  
+  resetDate(datePicker);
+});
