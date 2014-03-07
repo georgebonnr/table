@@ -10,10 +10,12 @@ hoursPicker = ['12:00am','12:30am','1:00am','1:30am','2:30am','3:00am',
 
 
 // tabs
-$tabs = $('.tabs');
-$(".tab-content").show();
+var tabs, modalNotification, reservationInit;
+$(document).ready(function(){
+  $tabs = $('.tabs');
+  $(".tab-content").show();
 
-
-// forms
-$modalNotification = $('.modal-notification');
-$reservationInit = null;
+  // forms
+  modalNotification = $('.modal-notification');
+  reservationInit = null;
+});
